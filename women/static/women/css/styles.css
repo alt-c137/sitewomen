@@ -1,3 +1,27 @@
 /* styles.css */
 /* Все основные стили находятся в base.html */
 /* Здесь только стили специфичные для отдельных страниц */
+
+
+
+.link-read-post a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent) !important;
+    border: 1px solid var(--accent);
+    padding: 0.45rem 1.1rem;
+    border-radius: 6px;
+    transition: all 0.35s;
+}
+
+.link-read-post a:hover {
+    background: var(--accent);
+    color: var(--bg) !important;
+}
+.link-read-post {
+    text-align: right;
+}
