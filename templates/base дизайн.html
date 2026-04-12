@@ -1,0 +1,472 @@
+{% load static %}
+{% load women_tags %}
+
+<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+	<title>{{title}}</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+	<link type="text/css" href="{% static 'women/css/styles.css' %}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'women/images/main.ico' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		/* ── CSS VARIABLES ── */
+		:root {
+			--transition: 0.35s cubic-bezier(.4,0,.2,1);
+		}
+
+		[data-theme="dark"] {
+			--bg:           #141418;
+			--bg-surface:   #1c1c22;
+			--bg-card:      #20202a;
+			--bg-sidebar:   #181820;
+			--border:       rgba(255,255,255,0.09);
+			--text:         #f2efe9;
+			--text-muted:   #b0adc8;
+			--text-faint:   #4e4c68;
+			--accent:       #c9a96e;
+			--accent-hover: #e2c48a;
+			--accent-dim:   rgba(201,169,110,0.15);
+			--nav-bg:       rgba(20,20,24,0.95);
+			--shadow:       0 8px 32px rgba(0,0,0,0.5);
+			--logo-filter:  invert(1);
+		}
+
+		[data-theme="light"] {
+			--bg:           #f5f3ef;
+			--bg-surface:   #ede9e3;
+			--bg-card:      #ffffff;
+			--bg-sidebar:   #eae6df;
+			--border:       rgba(0,0,0,0.08);
+			--text:         #1a1814;
+			--text-muted:   #7a6f5e;
+			--text-faint:   #c5bfb3;
+			--accent:       #8b6914;
+			--accent-hover: #6b4f0e;
+			--accent-dim:   rgba(139,105,20,0.1);
+			--nav-bg:       rgba(245,243,239,0.92);
+			--shadow:       0 8px 32px rgba(0,0,0,0.1);
+			--logo-filter:  none;
+		}
+
+		/* ── RESET ── */
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font-family: 'DM Sans', sans-serif;
+			font-size: 15px;
+			line-height: 1.7;
+			min-height: 100vh;
+			transition: background var(--transition), color var(--transition);
+		}
+
+		/* Форсируем цвета чтобы старый styles.css не перебивал */
+		body, body p, body h1, body h2, body h3, body h4, body li {
+			color: var(--text) !important;
+		}
+
+		body a {
+			color: var(--accent) !important;
+		}
+
+		a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+		a:hover { color: var(--accent-hover); }
+
+		/* ── NAVBAR ── */
+		.navbar {
+			position: sticky;
+			top: 0;
+			z-index: 100;
+			background: var(--nav-bg);
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			border-bottom: 1px solid var(--border);
+			padding: 0 2rem;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			height: 64px;
+			transition: background var(--transition);
+		}
+
+		.navbar-left {
+			display: flex;
+			align-items: center;
+			gap: 2.5rem;
+		}
+
+		.logo-link {
+			display: flex;
+			align-items: center;
+			gap: 0.6rem;
+		}
+
+		.logo-icon {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			background: var(--accent);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 18px;
+			font-weight: 600;
+			color: var(--bg);
+			letter-spacing: -0.5px;
+			flex-shrink: 0;
+		}
+
+		.logo-text {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 20px;
+			font-weight: 600;
+			color: var(--text);
+			letter-spacing: 0.02em;
+		}
+
+		.nav-links {
+			display: flex;
+			align-items: center;
+			gap: 0.25rem;
+			list-style: none;
+		}
+
+		.nav-links li a {
+			color: var(--text-muted);
+			font-size: 13.5px;
+			font-weight: 500;
+			letter-spacing: 0.03em;
+			padding: 0.4rem 0.85rem;
+			border-radius: 6px;
+			transition: all var(--transition);
+		}
+
+		.nav-links li a:hover {
+			color: var(--text);
+			background: var(--accent-dim);
+		}
+
+		.navbar-right {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		/* ── THEME TOGGLE ── */
+		.theme-toggle {
+			width: 52px;
+			height: 28px;
+			background: var(--bg-surface);
+			border: 1px solid var(--border);
+			border-radius: 99px;
+			cursor: pointer;
+			position: relative;
+			transition: background var(--transition);
+			flex-shrink: 0;
+		}
+
+		.theme-toggle::after {
+			content: '';
+			position: absolute;
+			top: 3px;
+			left: 3px;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background: var(--accent);
+			transition: transform var(--transition), background var(--transition);
+		}
+
+		[data-theme="light"] .theme-toggle::after {
+			transform: translateX(24px);
+		}
+
+		.theme-icon {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 11px;
+			pointer-events: none;
+			transition: opacity var(--transition);
+		}
+
+		.theme-icon.moon { left: 6px; opacity: 1; }
+		.theme-icon.sun  { right: 5px; opacity: 0.4; }
+
+		[data-theme="light"] .theme-icon.moon { opacity: 0.4; }
+		[data-theme="light"] .theme-icon.sun  { opacity: 1; }
+
+		.btn-login {
+			font-size: 13px;
+			font-weight: 500;
+			padding: 0.45rem 1.1rem;
+			border: 1px solid var(--border);
+			border-radius: 7px;
+			color: var(--text-muted);
+			transition: all var(--transition);
+		}
+
+		.btn-login:hover {
+			color: var(--text);
+			border-color: var(--accent);
+			background: var(--accent-dim);
+		}
+
+		/* ── PAGE LAYOUT ── */
+		.page-wrapper {
+			display: flex;
+			min-height: calc(100vh - 64px);
+		}
+
+		/* ── SIDEBAR ── */
+		.sidebar {
+			width: 220px;
+			flex-shrink: 0;
+			background: var(--bg-sidebar);
+			border-right: 1px solid var(--border);
+			padding: 2rem 1.25rem;
+			transition: background var(--transition);
+		}
+
+		.sidebar-label {
+			font-size: 10px;
+			font-weight: 500;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--text-faint);
+			margin-bottom: 0.75rem;
+			padding-left: 0.5rem;
+		}
+
+		#leftchapters {
+			list-style: none;
+			margin-bottom: 2rem;
+		}
+
+		#leftchapters li a,
+		#leftchapters li.selected {
+			display: block;
+			padding: 0.5rem 0.75rem;
+			border-radius: 7px;
+			font-size: 13.5px;
+			color: var(--text-muted);
+			transition: all var(--transition);
+		}
+
+		#leftchapters li a:hover {
+			color: var(--text);
+			background: var(--accent-dim);
+		}
+
+		#leftchapters li.selected {
+			color: var(--accent);
+			background: var(--accent-dim);
+			font-weight: 500;
+		}
+
+		.sidebar-divider {
+			height: 1px;
+			background: var(--border);
+			margin: 1.25rem 0;
+		}
+
+		.sidebar-channel-label {
+			font-size: 11px;
+			color: var(--text-faint);
+			padding: 0 0.5rem;
+			margin-bottom: 0.6rem;
+			letter-spacing: 0.05em;
+		}
+
+		.share-yt {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			padding: 0.6rem 0.75rem;
+			border-radius: 7px;
+			font-size: 13px;
+			color: var(--text-muted);
+			border: 1px solid var(--border);
+			transition: all var(--transition);
+		}
+
+		.share-yt::before {
+			content: '▶';
+			font-size: 11px;
+			color: #ff4444;
+		}
+
+		.share-yt:hover {
+			color: var(--text);
+			border-color: #ff4444;
+			background: rgba(255,68,68,0.08);
+		}
+
+		/* ── MAIN CONTENT ── */
+		.main-content {
+			flex: 1;
+			padding: 2.5rem 3rem;
+			min-width: 0;
+		}
+
+		/* ── BREADCRUMBS ── */
+		.breadcrumbs {
+			font-size: 12.5px;
+			color: var(--text-faint);
+			margin-bottom: 2rem;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.breadcrumbs a { color: var(--text-muted); }
+		.breadcrumbs a:hover { color: var(--accent); }
+
+		/* ── ARTICLE CARDS ── */
+		.post-card {
+			padding: 2rem 0;
+			border-bottom: 1px solid var(--border);
+			transition: all var(--transition);
+		}
+
+		.post-card:first-child { padding-top: 0; }
+
+		.post-card h2 {
+			font-family: 'Cormorant Garamond', serif;
+			font-size: 28px;
+			font-weight: 600;
+			color: var(--text);
+			margin-bottom: 0.75rem;
+			line-height: 1.3;
+			transition: color var(--transition);
+		}
+
+		.post-card h2 a { color: inherit; }
+		.post-card h2 a:hover { color: var(--accent); }
+
+		.post-card p {
+			color: var(--text-muted);
+			font-size: 14.5px;
+			line-height: 1.75;
+			margin-bottom: 1.25rem;
+		}
+
+		.btn-read {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.4rem;
+			font-size: 12.5px;
+			font-weight: 500;
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+			color: var(--accent);
+			border: 1px solid var(--accent);
+			padding: 0.45rem 1.1rem;
+			border-radius: 6px;
+			transition: all var(--transition);
+		}
+
+		.btn-read:hover {
+			background: var(--accent);
+			color: var(--bg);
+		}
+
+		/* ── FOOTER ── */
+		footer {
+			border-top: 1px solid var(--border);
+			padding: 1.5rem 3rem;
+			text-align: center;
+			font-size: 12px;
+			color: var(--text-faint);
+			background: var(--bg-surface);
+			transition: background var(--transition);
+		}
+	</style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+{% block mainmenu %}
+<nav class="navbar">
+	<div class="navbar-left">
+		<a href="{% url 'home' %}" class="logo-link">
+			<div class="logo-icon">W</div>
+			<span class="logo-text">Women</span>
+		</a>
+		<ul class="nav-links">
+			{% for m in menu %}
+			<li><a href="{% url m.url_name %}">{{ m.title }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="navbar-right">
+		<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+			<span class="theme-icon moon">🌙</span>
+			<span class="theme-icon sun">☀️</span>
+		</button>
+		<a href="#" class="btn-login">Войти</a>
+	</div>
+</nav>
+{% endblock mainmenu %}
+
+<!-- ── PAGE ── -->
+<div class="page-wrapper">
+
+	<!-- SIDEBAR -->
+	<aside class="sidebar">
+		<div class="sidebar-label">Категории</div>
+		<ul id="leftchapters">
+			{% if cat_selected == 0 or cat_selected is None %}
+			<li class="selected">Все категории</li>
+			{% else %}
+			<li><a href="{% url 'home' %}">Все категории</a></li>
+			{% endif %}
+
+			{% show_categories cat_selected %}
+		</ul>
+
+		<div class="sidebar-divider"></div>
+		<div class="sidebar-channel-label">Наш канал</div>
+		<a class="share-yt" href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists" target="_blank" rel="nofollow">YouTube</a>
+	</aside>
+
+	<!-- MAIN -->
+	<main class="main-content">
+		{% block breadcrumbs %}{% endblock %}
+
+		<div class="content-text">
+			{% block content %}{% endblock %}
+		</div>
+	</main>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+	<p>&copy; 2024 Частичное или полное копирование информации с данного сайта строго запрещено.</p>
+</footer>
+
+<script>
+	function toggleTheme() {
+		const html = document.documentElement;
+		const current = html.getAttribute('data-theme');
+		const next = current === 'dark' ? 'light' : 'dark';
+		html.setAttribute('data-theme', next);
+		localStorage.setItem('theme', next);
+	}
+
+	// Восстановить тему при загрузке
+	(function() {
+		const saved = localStorage.getItem('theme') || 'dark';
+		document.documentElement.setAttribute('data-theme', saved);
+	})();
+</script>
+
+</body>
+</html>
