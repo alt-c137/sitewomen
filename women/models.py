@@ -13,7 +13,6 @@ class Women(models.Model):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
-    time_create = models.DateTimeField(auto_now_add=True)
     content = models.TextField(blank=True)
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
@@ -60,6 +59,7 @@ class TagPost(models.Model):
 class Husband(models.Model):
     name = models.CharField(max_length=100)
     age = models.IntegerField(null=True, blank=True)
+    m_count = models.IntegerField(blank=True, default=0)
 
     def __str__(self):
         return self.name
