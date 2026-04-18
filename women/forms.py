@@ -1,10 +1,13 @@
+from wsgiref.validate import validator
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.utils.deconstruct import deconstructible
 
 
-from .models import Category, Husband
+from .models import Category, Husband, Women
+
 
 @deconstructible
 class RussianValidator:
@@ -19,21 +22,26 @@ class RussianValidator:
             raise ValidationError(self.message)
 
 
-class AddPostForm(forms.Form):
-
-    title = forms.CharField(label='Заголовок:', max_length=255, min_length=3,
-                            widget=forms.TextInput(attrs={'class':'form-input'}),
-                            validators=[RussianValidator()],
-                            error_messages={
-                                'min_length':'Слишком короткий заголовок',
-                                'required':'Без заголовка никак'
-                            })
-    slug = forms.SlugField(label="URL", max_length=255,
-                           validators=[
-                               MinLengthValidator(5, message='Минимум 5 символов'),
-                               MaxLengthValidator(100, message='Максимум 100 символов')
-                           ])
-    content = forms.CharField(label='Контент', widget=forms.Textarea(attrs={'cols':50,'rows':5}), required=False)
-    is_published = forms.BooleanField(required=False, initial=True, label='Статус')
+class AddPostForm(forms.ModelForm):
     cat = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label='Категория не выбрана', label='Категории')
     husband = forms.ModelChoiceField(queryset=Husband.objects.all(), required=False, empty_label='Не замужем', label='Муж')
+
+    class Meta:
+        model = Women
+        fields = ['title', 'slug', 'content', 'is_published', 'cat', 'husband', 'tags' ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class':'form-input'}),
+            'content': forms.Textarea(attrs={'cols':50, 'rows':5}),
+                }
+        labels = {
+            'slug':'URL'
+        }
+
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        validator = RussianValidator()
+        validator(title)
+        if len(title) > 50:
+            raise ValidationError('Длина превышает 50 символов.')
+        return title
