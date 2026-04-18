@@ -1,10 +1,11 @@
+from django import forms
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 
-from .forms import AddPostForm
+from .forms import AddPostForm, UploadFileForm
 from .models import Women, Category, TagPost
 
 menu = [{'title': "О сайте", 'url_name': 'about'},
@@ -27,8 +28,20 @@ def index(request):
     return render(request, 'women/index.html', context=data)
 
 
+def handle_uploaded_file(f):
+    with open(f'uploads/{f.name}', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
 def about(request):
-    return render(request, 'women/about.html', {'title': 'О сайте', 'menu': menu})
+    if request.method == 'POST':
+        #handle_uploaded_file(request.FILES['file_upload'])
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.clean_data['file'])
+    else:
+        form = UploadFileForm()
+    return render(request, 'women/about.html', {'title': 'О сайте', 'menu': menu, 'form':form})
 
 
 def show_post(request, post_slug):
@@ -48,15 +61,6 @@ def addpage(request):
     if request.method == 'POST':
         form = AddPostForm(request.POST)
         if form.is_valid():
-            #print(form.cleaned_data)
-            #try:
-            #     Women.objects.create(**form.cleaned_data)
-            #     return redirect('home')
-            # #except Exception as e:
-            #     print(e)  # увидишь ошибку в консоли PyCharm
-            #     form.add_error(None, "Ошибка добавления поста")
-            # except:
-            #     form.add_error(None, 'Ошибка добавления поста')
             form.save()
             return redirect('home')
     else:
