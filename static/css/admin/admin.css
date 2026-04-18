@@ -1,0 +1,15 @@
+/* Шапка, заголовки модулей и фильтры */
+#header, .module caption, #changelist-filter h2, #icon-moon {
+    background: #856C30 !important;
+}
+
+/* Фон под шапкой (если ты хочешь светлый фон там) */
+#content-start {
+    background: #W7F3EF !important;
+}
+
+/* Хлебные крошки (навигация под шапкой) */
+div.breadcrumbs {
+    background: #F5F3EF !important;
+    color: #333; /* Чтобы текст был виден на светлом фоне */
+}
