@@ -1,4 +1,6 @@
 from django.contrib import admin, messages
+from django.utils.safestring import mark_safe
+
 from .models import Women, Category
 
 
@@ -21,12 +23,12 @@ class MarriedFilter(admin.SimpleListFilter):
 
 @admin.register(Women)
 class WomenAdmin(admin.ModelAdmin):
-    fields = ['title', 'slug', 'content', 'cat', 'tags']
+    fields = ['title', 'slug', 'photo', 'post_photo', 'content', 'cat', 'tags']
     #exclude = ['is_published', 'tags']
-    #readonly_fields = ('id', 'slug')
+    readonly_fields = ['post_photo', ]
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal = ['tags',]
-    list_display = ('id', 'title', 'time_create', 'is_published', 'cat', 'brief_info')
+    list_display = ('id', 'title', 'post_photo', 'time_create', 'is_published', 'cat', 'brief_info')
     list_display_links = ('title',)
     ordering = ['time_create', 'title']
     list_editable = ('is_published', )
@@ -34,6 +36,14 @@ class WomenAdmin(admin.ModelAdmin):
     actions = ['set_published', 'set_draft']
     search_fields = ('title__starswith', 'cat__name')
     list_filter = (MarriedFilter, 'cat__name', 'is_published', 'id')
+    save_on_top = True
+
+    @admin.display(description='Фото')
+    def post_photo(self, women: Women):
+        if women.photo:
+            return mark_safe(f"<img src='{women.photo.url}' width='50' height='50'>")
+        else:
+            return ""
 
     @admin.display(description='Краткое описание', ordering='content')
     def brief_info(self, women: Women):
