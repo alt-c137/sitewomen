@@ -6,17 +6,11 @@ from django.urls import reverse, reverse_lazy
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView, UpdateView
 
 from .forms import AddPostForm, UploadFileForm
 from .models import Women, Category, TagPost, UploadFiles
-
-menu = [{'title': "О сайте", 'url_name': 'about'},
-        {'title': "Добавить статью", 'url_name': 'add_page'},
-        {'title': "Обратная связь", 'url_name': 'contact'},
-        {'title': "Войти", 'url_name': 'login'}
-]
-
+from .utils import menu, DataMixin
 
 
 def index(request):
@@ -79,7 +73,7 @@ def about(request):
 #
 #     return render(request, 'women/post.html', data)
 
-class ShowPost(DetailView):
+class ShowPost(DataMixin, DetailView):
    #model = Women
     template_name = 'women/post.html'
     context_object_name = 'post'
@@ -88,9 +82,8 @@ class ShowPost(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = context['post'].title
-        context['menu'] = menu
-        return context
+        return self.get_mixin_context(context, title=context['post'].title)
+
 
     def get_object(self, queryset=None):
         return get_object_or_404(Women.published, slug=self.kwargs[self.slug_url_kwarg])
@@ -135,18 +128,31 @@ def addpage(request):
 #         }
 #         return render(request, 'women/addpage.html', data)
 
-class AddPage(FormView):
-    form_class = AddPostForm
+class AddPage(CreateView):
+    # form_class = AddPostForm
+    model = Women
+    fields = ['title', 'slug', 'content', 'is_published', 'photo', 'cat', 'tags', 'husband', ]
     template_name = 'women/addpage.html'
-    success_url = reverse_lazy('home')
+    # success_url = reverse_lazy('home')
     extra_context = {
         'menu': menu,
         'title': 'Добавление статьи',
     }
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+class UpdatePage(UpdateView):
+    model = Women
+    fields = ['title', 'slug', 'content', 'is_published', 'photo', 'cat', 'tags']
+    template_name = 'women/addpage.html'
+    success_url = reverse_lazy('home')
+    extra_context = {
+        'menu': menu,
+        'title': 'Редактирование статьи',
+    }
+
+
+    # def form_valid(self, form):
+    #     form.save()
+    #     return super().form_valid(form)
 
 def contact(request):
     return HttpResponse("Обратная связь")
