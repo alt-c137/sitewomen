@@ -1,54 +1,93 @@
-/* styles.css */
-/* Все основные стили находятся в base.html */
-/* Здесь только стили специфичные для отдельных страниц */
+/* ─── styles.css ─────────────────────────────────────────────
+   Стили специфичные для страниц — пагинация, формы
+   ──────────────────────────────────────────────────────────── */
 
-
-
-.link-read-post a {
-    display: inline-flex;
-    align-items: center;
-    font-size: 12.5px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--accent) !important;
-    border: 1px solid var(--accent);
-    padding: 0.45rem 1.1rem;
-    border-radius: 6px;
-    transition: all 0.35s;
-}
-
-.link-read-post a:hover {
-    background: var(--accent);
-    color: var(--bg) !important;
-}
-.link-read-post {
-    text-align: right;
-}
+/* ── Формы ──────────────────────────────────────────────────── */
 .form-input {
     width: 300px;
-    font-size: 16px;
+    font-size: 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.5rem 0.8rem;
+    color: var(--text);
+    transition: border-color 0.2s ease;
+    outline: none;
 }
+.form-input:focus { border-color: var(--accent); }
 
 .form-label {
     display: inline-block;
     min-width: 150px;
     vertical-align: top;
+    font-size: 13.5px;
+    color: var(--muted) !important;
 }
 
 .form-error ul {
     list-style: none;
     padding: 0;
-    color: #FF0033;
+    color: #e05555 !important;
+    font-size: 13px;
 }
 
 .form-button {
-    min-width: 200px;
-    font-size: 16px;
+    min-width: 160px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1.2rem;
+    background: var(--accent);
+    color: var(--bg) !important;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.form-button:hover { opacity: 0.85; }
+
+/* ── Пагинация ──────────────────────────────────────────────── */
+nav.list-pages {
+    margin-top: 2rem;
+    padding: 1.5rem 2.5rem 0;
+    border-top: 1px solid var(--border);
+    grid-column: 2;
 }
 
-.img-article-left.thumb {
-width: 50px;
-height: 50px;
-object-fit: cover;
+nav.list-pages ul {
+    list-style: none !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.3rem !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+nav.list-pages ul li.page-num a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--muted) !important;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+nav.list-pages ul li.page-num a:hover {
+    background: var(--accent-dim);
+    color: var(--accent) !important;
+    border-color: var(--accent);
+}
+
+nav.list-pages ul li.page-num-selected a {
+    background: var(--accent) !important;
+    color: var(--bg) !important;
+    border: 1px solid var(--accent) !important;
+    border-radius: 8px !important;
 }

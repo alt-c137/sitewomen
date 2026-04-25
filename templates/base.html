@@ -266,22 +266,111 @@
 		/* КОНТЕНТ */
 		.content { min-width: 0; }
 		.content-text {
-			background: var(--surface);
-			border-radius: 12px;
-			border: 1px solid var(--border);
-			padding: 2rem 2.5rem;
-			box-shadow: var(--shadow);
-			min-height: 480px;
-			transition: background var(--tr), border-color var(--tr);
-		}
-		[data-theme="dark"] .content-text {
 			background: transparent;
 			border: none;
 			box-shadow: none;
-			padding: 0;
+			padding: 0.5rem 0;
+			min-height: 0;
+			transition: none;
 		}
 
-		/* Хлебные крошки */
+		/* ── Список статей ─────────────────────────────────── */
+		ul.list-articles {
+			list-style: none !important;
+			padding: 0 !important;
+			margin: 0 !important;
+		}
+
+		ul.list-articles > li {
+			padding: 2rem 0 !important;
+			border-bottom: 1px solid var(--border) !important;
+			transition: padding-left 0.25s ease;
+		}
+
+		ul.list-articles > li:first-child { padding-top: 0.25rem !important; }
+		ul.list-articles > li:last-child { border-bottom: none !important; }
+		ul.list-articles > li:hover { padding-left: 6px !important; }
+
+		.article-panel {
+			display: flex;
+			gap: 1.5rem;
+			margin-bottom: 0.5rem;
+		}
+
+		.article-panel p {
+			font-size: 11px !important;
+			letter-spacing: 0.1em !important;
+			text-transform: uppercase !important;
+			color: var(--faint) !important;
+			margin: 0 !important;
+		}
+
+		.img-article-left.thumb {
+			width: 52px !important;
+			height: 52px !important;
+			object-fit: cover !important;
+			border-radius: 50% !important;
+			margin-bottom: 0.75rem !important;
+			opacity: 0.88;
+			display: block;
+		}
+
+		ul.list-articles > li > h2 {
+			font-family: 'Cormorant Garamond', serif !important;
+			font-size: 1.65rem !important;
+			font-weight: 600 !important;
+			line-height: 1.25 !important;
+			letter-spacing: -0.01em !important;
+			margin-bottom: 0.6rem !important;
+		}
+
+		ul.list-articles > li > h2 a {
+			color: var(--text) !important;
+			text-decoration: none !important;
+			transition: color 0.2s ease !important;
+		}
+
+		ul.list-articles > li > h2 a:hover {
+			color: var(--accent) !important;
+		}
+
+		p.link-read-post {
+			margin-top: 1rem !important;
+			text-align: right !important;
+		}
+
+		p.link-read-post a {
+			display: inline-flex !important;
+			align-items: center !important;
+			gap: 0.35rem !important;
+			font-size: 11px !important;
+			font-weight: 500 !important;
+			letter-spacing: 0.1em !important;
+			text-transform: uppercase !important;
+			color: var(--accent) !important;
+			text-decoration: none !important;
+			opacity: 0.65;
+			border: none !important;
+			background: none !important;
+			padding: 0 !important;
+			transition: opacity 0.2s ease, gap 0.2s ease !important;
+		}
+
+		p.link-read-post a::after {
+			content: '→';
+			font-size: 13px;
+			transition: transform 0.2s ease;
+		}
+
+		p.link-read-post a:hover {
+			opacity: 1 !important;
+			gap: 0.6rem !important;
+			color: var(--accent) !important;
+		}
+
+		p.link-read-post a:hover::after { transform: translateX(4px); }
+
+		/* ── Хлебные крошки */
 		.breadcrumbs, .breadcrumb {
 			font-size: 12.5px;
 			display: flex; align-items: center; gap: .4rem;
@@ -298,6 +387,7 @@
 			background: var(--surface);
 			transition: background var(--tr);
 		}
+		.content { min-width: 0; min-height: 90vh; }
 		#footer p span { color: var(--faint) !important; font-size: 12px; }
 	</style>
 </head>
@@ -351,7 +441,7 @@
 
 		<li class="share">
 			<p><span>Наш канал</span></p>
-			<a class="share-yt" href="https://www.youtube.com/channel/UClJzWfGWuGJL2t-3dYKcHTA/playlists" target="_blank" rel="nofollow">
+			<a class="share-yt" href="https://www.youtube.com/watch?v=_6vG9MdyZ6Q" target="_blank" rel="nofollow">
 				<span>YouTube</span>
 			</a>
 		</li>
@@ -365,16 +455,23 @@
 	{% block breadcrumbs %}
 	{% endblock %}
 
+
+
 	<!-- Блок контента -->
 	<div class="content-text">
 		{% block content %}
 		{% endblock %}
 	</div>
 	<!-- Конец блока контента -->
+{% block navigation %}
+{% endblock %}
 </td>
+
+
 
 </tr></table>
 </td></tr>
+
 
 <!-- Footer -->
 <tr><td valign=top>
