@@ -20,12 +20,12 @@ from django.contrib import admin
 from django.urls import path, include
 from women import views
 from women.views import page_not_found
-
 from sitewomen import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('women.urls')),
+    path('users/', include('users.urls', namespace='urls')),
 ] + debug_toolbar_urls()
 
 if settings.DEBUG:
