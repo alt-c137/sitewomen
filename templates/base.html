@@ -129,7 +129,11 @@
 		ul#mainmenu > li > a:hover { background: var(--accent-dim); }
 		ul#mainmenu > li > a:hover span { color: var(--text) !important; }
 
-		li.last { margin-left: auto !important; }
+		li.last { margin-left: auto !important;
+		display: flex !important;
+		align-items: center !important;
+		gap: 0.5rem !important; }
+
 		li.last > a {
 			border: 1px solid var(--border) !important;
 			border-radius: 7px !important;
@@ -139,6 +143,12 @@
 			border-color: var(--accent) !important;
 			background: var(--accent-dim) !important;
 		}
+
+		li.last span.username {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: var(--muted) !important;
+        }
 
 		/* Переключатель темы */
 		.theme-toggle {
@@ -404,13 +414,14 @@
 				<span class="logo-word"><span>Women</span></span>
 			</a>
 		</li>
-		{% for m in menu %}
-			{% if not forloop.last %}
-			<li><a href="{% url m.url_name %}"><span>{{m.title}}</span></a></li>
-			{% else %}
-			<li class="last"><a href="{% url m.url_name %}"><span>{{m.title}}</span></a></li>
-			{% endif %}
+		{% for m in mainmenu %}
+			<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
 		{% endfor %}
+        {% if user.is_authenticated %}
+            <li class="last"><span class="username">{{ user.username }}</span> | <a href="{% url 'users:logout' %}">Выйти</a></li>
+        {% else %}
+            <li class="last"><a href="{% url 'users:login' %}">Войти</a> | <a href="#">Регистрация</a></li>
+        {% endif %}
 		<li style="list-style:none">
 			<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
 				<span class="t-icon moon">🌙</span>
