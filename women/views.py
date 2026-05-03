@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models.signals import post_save
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, HttpResponsePermanentRedirect
@@ -28,7 +30,7 @@ class HomePage(DataMixin, ListView):
         return Women.published.all().select_related('cat')
 
 
-
+@login_required()
 def about(request):
     contact_list = Women.published.all()
     paginator = Paginator(contact_list, 3)
@@ -56,11 +58,17 @@ class ShowPost(DataMixin, DetailView):
 
 
 
-class AddPage(DataMixin, CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     model = Women
     fields = ['title', 'slug', 'content', 'is_published', 'photo', 'cat', 'tags', 'husband', ]
     template_name = 'women/addpage.html'
     title_page = 'Добавление статьи'
+    login_url = '/admin/'
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 
 
